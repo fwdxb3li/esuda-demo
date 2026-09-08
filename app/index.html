@@ -52,11 +52,27 @@
   .guide {
     position: fixed; inset: 0; z-index: 100; display: grid; place-items: center;
     padding: 24px; background: rgba(8,10,24,.82); backdrop-filter: blur(6px);
+    /* The page itself cannot scroll — Expo's reset sets overflow:hidden on
+       body — so a card taller than a short window would put its own dismiss
+       button out of reach. Scroll here instead. */
+    overflow-y: auto;
   }
   .guide[hidden] { display: none; }
   .guide__card {
     background: #fff; color: #16181D; border-radius: 20px; padding: 30px;
     max-width: 420px; width: 100%; box-shadow: 0 30px 70px -25px rgba(0,0,0,.7);
+    /* Never taller than the space available, and scrollable when it would be. */
+    max-height: calc(100dvh - 48px); overflow-y: auto;
+  }
+  /* A short window (a laptop in a small browser, a phone in landscape) gets a
+     tighter card rather than a clipped one. */
+  @media (max-height: 560px) {
+    .guide { padding: 12px; }
+    .guide__card { padding: 20px; max-height: calc(100dvh - 24px); }
+    .guide__h { font-size: 24px; }
+    .guide__lede { font-size: 14px; }
+    .guide__list { margin-top: 14px; font-size: 13.5px; }
+    .guide__go { margin-top: 16px; padding: 13px; }
   }
   .guide__eyebrow {
     margin: 0 0 6px; font-size: 11px; font-weight: 800; letter-spacing: .16em;
