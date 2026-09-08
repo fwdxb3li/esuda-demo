@@ -18,7 +18,7 @@
     background: #0A0D1E;
     background-image: radial-gradient(120% 90% at 50% 0%, #191340, #0A0D1E 70%);
     display: flex; flex-direction: column; align-items: center; justify-content: center;
-    gap: 14px; padding: 18px 16px;
+    gap: 10px; padding: 12px 14px;
     font: 15px/1.5 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
   }
 
@@ -90,7 +90,9 @@
   }
   .guide__foot { margin: 14px 0 0; text-align: center; color: #8A90A3; font-size: 12.5px; }
 
-  .caption { margin: 0; text-align: center; color: #9AA0C2; font-size: 13px; line-height: 1.6; }
+  .caption { margin: 0; text-align: center; color: #9AA0C2; font-size: 12.5px; line-height: 1.45; }
+  /* On a short window the caption costs height the phone needs more. */
+  @media (max-height: 720px) { .caption { display: none; } }
   .caption .live { display: inline-flex; align-items: center; gap: 7px; color: #EDEFF8; font-weight: 600; }
   .dot { width: 8px; height: 8px; border-radius: 50%; background: #3FCB80; box-shadow: 0 0 0 4px rgba(63,203,128,.18); }
   .boot { position: fixed; inset: 0; display: grid; place-items: center; color: #8A90AE; z-index: 50; }
@@ -403,7 +405,8 @@
 <script>
   (function () {
     var W = 424, H = 896, frame = document.getElementById("frame"),
-        device = document.getElementById("device");
+        device = document.getElementById("device"),
+        caption = document.querySelector(".caption");
     function fit() {
       // Full-screen below the breakpoint; the stylesheet handles it there.
       if (window.matchMedia("(max-width: 470px), (max-height: 560px)").matches) {
@@ -411,7 +414,16 @@
         device.style.transform = "";
         return;
       }
-      var k = Math.min(1, (window.innerHeight - 104) / H, (window.innerWidth - 40) / W);
+      // Reserve only what is actually on the page: the caption hides itself on
+      // a short window, and reserving for it anyway shrank the phone for no
+      // reason — or, when it was showing, let the phone grow into it.
+      var reserve = (caption && getComputedStyle(caption).display !== "none")
+        ? 26 + caption.offsetHeight + 24
+        : 36;
+      // Scale up as well as down. Capping at 1 pinned the phone to 424px wide
+      // on a 27" display, which is why it looked lost; 1.7 keeps text crisp
+      // (the browser re-rasterises a transformed DOM) and fills a tall window.
+      var k = Math.min(1.7, (window.innerHeight - reserve) / H, (window.innerWidth - 32) / W);
       device.style.transform = "scale(" + k + ")";
       frame.style.width = W * k + "px";
       frame.style.height = H * k + "px";
