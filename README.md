@@ -13,3 +13,11 @@ declined identity review needs a reason, a balance cannot be moved without one.
 
 This repository contains only the compiled demonstration. The application
 source is private.
+
+## Two demonstrations
+
+- **`/`** — the staff operations console (§2.9)
+- **`/app/`** — the customer app, running in a phone
+
+Both are self-contained: everything runs in the browser, there is no server,
+and reloading either one resets it.
