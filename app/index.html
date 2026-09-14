@@ -1,6 +1,18 @@
 <meta charset="utf-8">
 <title>E-Suda Parcel App</title>
 <script>
+  /* Pin the base URL to the directory this page was served from, before any
+     other tag is parsed. The router trick further down presents "/" to Expo
+     Router by rewriting the address, and relative URLs — the bundle, the icon
+     fonts — would otherwise re-resolve against the domain root and 404 when
+     the demo lives under a sub-path. An explicit <base> settles them first. */
+  (function () {
+    var b = document.createElement("base");
+    b.href = location.origin + location.pathname.replace(/[^/]*$/, "");
+    document.head.insertBefore(b, document.head.firstChild);
+  })();
+</script>
+<script>
   // First thing on the page, so nothing can throw before it is listening.
   window.__err = [];
   window.addEventListener("error", function (e) {
